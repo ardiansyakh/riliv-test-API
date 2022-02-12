@@ -1,4 +1,4 @@
-export class AdminController {
+class AdminController {
     static addItem(req, res, next) {
 
     }
@@ -9,3 +9,4 @@ export class AdminController {
 
     }
 }
+module.exports = AdminController

@@ -1,13 +1,14 @@
-import express from "express"
-import auth from './auth'
-import admin from './admin'
-import order from './order'
-import item from './item'
+const express = require("express")
+const auth = require('./auth')
+const admin = require('./admin')
+const order = require('./order')
+const item = require('./item')
+const { authentication, isAdmin } = require("../middleware/auth")
 const route = express.Router()
 
-route.use('/admin', admin)
+route.use('/admin', authentication, isAdmin, admin)
 route.use('/item', item)
 route.use('/auth', auth)
-route.use('/order', order)
+route.use('/order', authentication, order)
 
-export default route
+module.exports = route

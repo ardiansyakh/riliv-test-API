@@ -1,4 +1,4 @@
-export class ItemController {
+class ItemController {
     static getItems(req, res, next) {
 
     }
@@ -6,3 +6,5 @@ export class ItemController {
 
     }
 }
+
+module.exports = ItemController

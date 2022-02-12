@@ -1,4 +1,4 @@
-export class AuthController {
+class AuthController {
     static register(req, res, next) {
 
     }
@@ -6,3 +6,5 @@ export class AuthController {
 
     }
 }
+
+module.exports = AuthController

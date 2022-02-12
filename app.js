@@ -1,12 +1,12 @@
-import dotenv from 'dotenv'
+const dotenv = require('dotenv')
 if(process.env.NODE_ENV !== 'prod'){
     dotenv.config()
 }
-import express from 'express'
-import cors from 'cors'
-import route from './routes'
-import err from './helper/error'
-import http from 'http'
+const express = require('express')
+const cors = require('cors')
+const route = require('./routes')
+const err = require('./helper/error')
+const http = require('http')
 const port = process.env.PORT || 3000
 
 const app = express()
@@ -20,4 +20,4 @@ server.listen(port, () => {
     console.log('server running on: ', port)
 })
 
-export default app
+module.exports = app

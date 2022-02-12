@@ -10,4 +10,4 @@ const error = (err, req, res, next) => {
     }
     res.status(statusCode).json({msg})
 }
-export default error
+module.exports = error

@@ -1,4 +1,4 @@
-export class OrderController {
+class OrderController {
     static getCart(req, res, next) {
 
     }
@@ -12,3 +12,5 @@ export class OrderController {
 
     }
 }
+
+module.exports = OrderController
