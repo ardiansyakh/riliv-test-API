@@ -3,7 +3,7 @@ const {
     Item,
     Cart,
     Purchasing,
-    PurchasingDetail
+    PurchasingDetail,
 } = require('../models')
 const { v4: uuidv4 } = require('uuid')
 class OrderService {
@@ -91,7 +91,6 @@ class OrderService {
             let total = 0
             if(carts.length >0)
                 carts.forEach(cart=> {
-                    console.log(cart);
                     let subtotal = cart.qty * cart.Item.price
                     cart.subTotal = subtotal
                     total += subtotal
@@ -119,7 +118,7 @@ class OrderService {
                     return this.getCart({userId}, next)
                 }
                 else {
-                    throw({code: 400, message: `stock availabel: ${item.stock}`})
+                    throw({code: 400, message: `stock available: ${item.stock}`})
                 }
             }
             else {
@@ -175,6 +174,8 @@ class OrderService {
         try {
             let { userId } = param
             let carts = await this.getCart({ userId })
+            if(carts.carts.length == 0)
+                throw({code: 400, message: 'carts is empty'})
             let transaction_code = uuidv4()
             let purchasing = await Purchasing.create({
                 transaction_code, 
@@ -184,28 +185,48 @@ class OrderService {
             })
             let purchasing_detail = []
             let deleted_cart = []
+            let update_item = []
             await carts.carts.map(cart=> {
-                purchasing_detail = [
-                    ...purchasing_detail, 
-                    {
-                        purchasingId: purchasing.id,
-                        itemId: cart.itemId,
-                        qty: cart.qty,
-                        price: cart.Item.price
-                    }
-                ]
-                deleted_cart = [
-                    ...deleted_cart,
-                    cart.id
-                ]
-            })
-            await PurchasingDetail.bulkCreate(purchasing_detail)
-            await Cart.destroy({
-                where: {
-                    id: deleted_cart
+                let newStock = cart.Item.stock - cart.qty
+                if(newStock >= 0) {
+                    purchasing_detail = [
+                        ...purchasing_detail, 
+                        {
+                            purchasingId: purchasing.id,
+                            itemId: cart.itemId,
+                            qty: cart.qty,
+                            price: cart.Item.price
+                        }
+                    ]
+                    deleted_cart = [
+                        ...deleted_cart,
+                        cart.id
+                    ]
+                    update_item = [
+                        ...update_item,
+                        {
+                            id: cart.Item.id,
+                            stock: newStock,
+                        },
+                    ]
+                }
+                else {
+                    throw({code: 400, message: `item ${cart.Item.name}, stock available: ${cart.Item.stock}`})
                 }
             })
-            return 'Checkout Success'
+            console.log((update_item));
+            if(purchasing_detail.length > 0) {
+                await update_item.map(item=> {
+                    Item.update(item, {where: {id: item.id}})
+                })
+                await PurchasingDetail.bulkCreate(purchasing_detail)
+                await Cart.destroy({
+                    where: {
+                        id: deleted_cart
+                    }
+                })
+                return purchasing
+            }
         } catch (error) {
             next(error)
         }
@@ -213,7 +234,7 @@ class OrderService {
     static quickCheckout = async (params, next) => {
         try {
             let {item, userId, qty} = params
-            const checkItem = Item.findByPk(item.id)
+            const checkItem = await Item.findByPk(item.id)
             if(checkItem.stock > 0) {
                 let transaction_code = uuidv4()
                 let purchasing = await Purchasing.create({
@@ -228,7 +249,9 @@ class OrderService {
                     qty,
                     price: item.price
                 })
-                return 'Checkout Success'
+                checkItem.stock = checkItem.stock - 1
+                await checkItem.save()
+                return purchasing
             }
             else {
                 throw({code: 400, message: `product out of stock`})

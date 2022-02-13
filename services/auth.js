@@ -14,6 +14,7 @@ class AuthService {
                 throw({code: 400, message: 'User Already Exist' })
             }
             let newUser = await User.create({ email, password, role })
+            newUser.password = null
             return newUser
             
         } catch (error) {

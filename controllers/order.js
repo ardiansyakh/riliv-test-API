@@ -50,7 +50,7 @@ class OrderController {
             const userId = req.userId
             const checkout = await OrderService.checkout({userId}, next)
             if(checkout)
-                res.status(201).json({checkout})
+                res.status(201).json({data: checkout})
         } catch (error) {
             next(error)
         }
@@ -61,7 +61,7 @@ class OrderController {
             const userId = req.userId
             const checkout = await OrderService.quickCheckout({item, userId, qty: 1}, next)
             if(checkout)
-                res.status(201).json({checkout})
+                res.status(201).json({data: checkout})
         } catch (error) {
             next(error)
         }
