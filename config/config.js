@@ -22,6 +22,11 @@ module.exports = {
     "password": process.env.CONFIG_PASSWORD,
     "database": process.env.CONFIG_DATABASE,
     "host": process.env.CONFIG_HOST,
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
