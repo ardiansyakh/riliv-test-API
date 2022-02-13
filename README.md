@@ -20,7 +20,7 @@ npm start
 ### HTTP REQUEST
 ***BASE URL:***
 ```
-http://127.0.0.1:3000
+https://riliv-test-api.herokuapp.com
 ```
 
 ## Register
