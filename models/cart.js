@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Item, {
         foreignKey: 'itemId'
       })
-      this.belongsTo(models.userId, {
+      this.belongsTo(models.User, {
         foreignKey: 'userId'
       })
     }

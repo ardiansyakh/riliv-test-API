@@ -1,13 +1,31 @@
 const error = (err, req, res, next) => {
-    let statusCode
-    let msg
-
-    switch (msg) {
-        default:
-            statusCode = 500
-            msg = 'Internal Server Error'
-            break;
+    console.log('====================================');
+    console.log(err);
+    console.log('====================================');
+    if (err.code && err.code != 500) {
+        res.status(err.code).json({
+        status: err.code,
+        message: err.message,
+        });
+    } else if (err.name === 'SequelizeValidationError') {
+        let messages = [];
+        for (let error in err.errors) {
+        messages.push(err.errors[error].message)
+        }
+        res.status(400).json({
+        status: 400,
+        messages,
+        });
+    }else if(err.name === 'ParameterMissingError'){
+        res.status(400).json({
+        status: 400,
+        message: err.message
+        })
+    } else {
+        res.status(500).json({
+        status: 500,
+        message: 'Internal Server Error',
+        });
     }
-    res.status(statusCode).json({msg})
 }
 module.exports = error

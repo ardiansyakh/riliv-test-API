@@ -2,9 +2,13 @@ const express = require("express")
 const { OrderController } = require('../controllers')
 const route = express.Router()
 
-route.get('/cart', OrderController.getCart)
-route.post('/cart', OrderController.addToCart)
-route.delete('/cart', OrderController.removeItem)
+route.get('/carts', OrderController.getCart)
+route.post('/carts', OrderController.addToCart)
+route.patch('/carts/:id/qty', OrderController.updateQty)
+route.delete('/carts/:id', OrderController.removeItem)
 route.post('/checkout', OrderController.checkout)
+route.post('/quickCheckout', OrderController.quickCheckout)
+route.get('/purchasing', OrderController.getPurchasing)
+route.get('/purchasing/:transaction_code', OrderController.getPurchasingDetail)
 
 module.exports = route

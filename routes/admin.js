@@ -1,9 +1,11 @@
 const express = require("express")
-const { AdminController } = require("../controllers")
+const { AdminController, OrderController } = require("../controllers")
 const route = express.Router()
 
-route.post('/', AdminController.addItem)
-route.put('/:id', AdminController.updateItem)
-route.delete('/:id', AdminController.deleteItem)
+route.post('/item', AdminController.addItem)
+route.put('/item/:id', AdminController.updateItem)
+route.delete('/item/:id', AdminController.deleteItem)
+route.get('/purchasing', AdminController.getPurchasing)
+route.get('/purchasing/:transaction_code', OrderController.getPurchasingDetail)
 
 module.exports = route

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, {
         foreignKey: 'userId'
       })
-      this.hasMany(models.TransactionDetail, {
+      this.hasMany(models.PurchasingDetail, {
         foreignKey: 'purchasingId'
       })
     }
@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     transaction_code: DataTypes.STRING,
     payment_status: DataTypes.ENUM('WAITING_PAYMENT', 'COMPLETED', 'CANCELLED'),
     userId: DataTypes.INTEGER,
+    total: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Purchasing',
