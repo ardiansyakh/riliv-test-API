@@ -21,7 +21,7 @@ module.exports = {
     "username": process.env.CONFIG_USERNAME,
     "password": process.env.CONFIG_PASSWORD,
     "database": process.env.CONFIG_DATABASE,
-    "host": "127.0.0.1",
+    "host": process.env.CONFIG_HOST,
     "dialect": "postgres"
   }
 }
